@@ -26,7 +26,7 @@ public class IngredientByIdConverter implements Converter<String, Ingredient> {
     }
 
     @Override
-    public Ingredient convert(String id) {
+    public Ingredient convert(@SuppressWarnings("null") String id) {
         return ingredientMap.get(id);
     }
 }

@@ -2,11 +2,15 @@ package com.example.tacocloudaction6.controllers;
 
 import com.example.tacocloudaction6.models.Ingredient;
 import com.example.tacocloudaction6.models.Ingredient.Type;
+
+import jakarta.validation.Valid;
+
 import com.example.tacocloudaction6.models.Taco;
 import com.example.tacocloudaction6.models.TacoOrder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -18,7 +22,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Controller
 @RequestMapping("/design")
-@SessionAttributes("testSession")
+@SessionAttributes("tacoOrder")
 public class DesignTacoController {
 
     @ModelAttribute
@@ -39,11 +43,11 @@ public class DesignTacoController {
         model.addAttribute("ingredients", ingredients);
         for (Type type: types) {
             model.addAttribute(type.toString().toLowerCase(),
-                    filterByType(ingredients, type));
+                filterByType(ingredients, type));
         }
     }
-
-    @ModelAttribute(name = "testSession")
+    
+    @ModelAttribute(name = "tacoOrder")
     public TacoOrder order() {
         return new TacoOrder();
     }
@@ -59,12 +63,18 @@ public class DesignTacoController {
     }
 
     @PostMapping
-    public String processTaco(Taco taco, @ModelAttribute(name = "testSession") TacoOrder tacoOrder) {
-        tacoOrder.addTaco(taco);
+    public String processTaco(@Valid Taco taco, Errors errors, @ModelAttribute TacoOrder tacoOrder) {
+        
+        if(errors.hasErrors()) {
+            return "design";
+        }
 
+        tacoOrder.addTaco(taco);
+        log.info("Processing tacoOrder: {}", tacoOrder);
         log.info("Processing taco: {}", taco);
         return "redirect:/orders/current";
     }
+
     private Iterable<Ingredient> filterByType(List<Ingredient> ingredients, Type type) {
         return ingredients.stream().filter(x -> x.getType().equals(type)).collect(Collectors.toList());
     }

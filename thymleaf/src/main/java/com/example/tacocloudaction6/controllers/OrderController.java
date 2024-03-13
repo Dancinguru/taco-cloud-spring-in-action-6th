@@ -27,7 +27,7 @@ public class OrderController {
         if(errors.hasErrors()) {
             return "orderForm";
         }
-        
+
         log.info("Order submitted: {}", order);
         sessionStatus.setComplete();
 

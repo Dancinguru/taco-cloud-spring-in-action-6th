@@ -2,6 +2,7 @@ package com.example.tacocloudaction6.models;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
 @Data
-public class TacoOrder {
+public class TacoOrder implements Serializable{
+    private static final long serialVersionUID = 1L;
+    private Long id;
+    private Date placeAt;
     @NotBlank(message = "Delivery Name is required.")
     private String deliveryName;
     @NotBlank(message = "Delivery Street is required.")
